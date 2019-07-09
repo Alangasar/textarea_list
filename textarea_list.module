@@ -42,9 +42,13 @@ function theme_textarea_list_formatter_textarea_list($element) {
 }
 
 function _textarea_list_textarea_to_list($str) {
-  $output = '';
+  $items = [];
   foreach (explode("\n", $str) as $line) {
-    $output .= '<li>' . check_plain($line) . '</li>';
+    $items[] = check_plain($line);
   }
-  return '<ul>' . $output . '</ul>';
+
+  return theme('item_list', array(
+    'items' => $items,
+    'attributes' => array('class' => array('textarea_list')),
+  ));
 }
