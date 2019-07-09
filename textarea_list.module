@@ -1,0 +1,50 @@
+<?php
+/**
+ * Implements hook_field_formatter_info().
+ */
+function textarea_list_field_formatter_info() {
+  return array(
+    'textarea_list' => array(
+      'label' => t('Textarea to list'),
+      'field types' => array('text_long'),
+      'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view(). This code just passes straight
+ */
+function textarea_list_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+
+  $elements = array();
+  foreach ($items as $delta => $item) {
+    $elements[$delta] = array(
+      '#markup' => theme('textarea_list_formatter_'. $display['type'], array('element' => $item, 'field' => $instance)),
+    );
+  }
+  return $elements;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function textarea_list_theme() {
+  return array(
+    'textarea_list_formatter_textarea_list' => array(
+      'variables' => array('element' => NULL),
+    ),
+  );
+}
+
+function theme_textarea_list_formatter_textarea_list($element) {
+  return _textarea_list_textarea_to_list($element['element']['value']);
+}
+
+function _textarea_list_textarea_to_list($str) {
+  $output = '';
+  foreach (explode("\n", $str) as $line) {
+    $output .= '<li>' . check_plain($line) . '</li>';
+  }
+  return '<ul>' . $output . '</ul>';
+}
